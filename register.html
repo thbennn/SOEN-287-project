@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="logo">
+    <img src="photo/ASSURE_Concordia.png" alt="university logo">
+  </div>
+
+  <div class="container">
+     <div class="form-box " id="register-form">
+        <form action="">
+          <h2>Register</h2>
+          <input type="text" name="first-name" placeholder="First name" required>
+          <input type="text" name="last-name" placeholder="Last name" required>
+          <input type="text" id="dob" name="dob" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" placeholder="Date of Birth (dd/mm/yyyy)"  required>
+          <input type="tel" name="phone" placeholder="Phone number">
+          <input type="text" name="student-id" placeholder="Student ID" pattern="[0-9]{8}" maxlength="8"required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" name="confirm-password" placeholder="Re-enter Password" required>
+          <select name="role" required>
+            <option value="">---Select Role---</option>
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+           </select> 
+          <button type="submit" name="register">Register</button>
+          <p>Already have an account? <a href="login.html">Login</a></p>
+ 
+        </form>
+        
+    </div> 
+
+
+
+  </div>
+
+  
+</body>
+</html>
