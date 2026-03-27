@@ -1,0 +1,26 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: #fffdf2;
+}
+
+.nav-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-link-custom {
+  text-decoration: none;
+  color: #1a1c20;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link-custom:hover {
+  color: #5c2d91;
+}
