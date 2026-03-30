@@ -33,6 +33,27 @@ app.get('/api/courses', (req, res) => {
     });
 });
 
+app.post('/api/courses', (req, res) => {
+    const { courseCode, courseName, instructor, status } = req.body;
+    
+    //TEMPORARY: Hardcode a userId
+    const userId = 1; 
+
+    const query = `
+      INSERT INTO courses (userId, courseCode, courseName, instructor, status) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    db.query(query, [userId, courseCode, courseName, instructor, status], (err, results) => {
+        if (err) {
+            console.error("Error inserting course:", err);
+            res.status(500).json({ error: "Failed to add course" });
+        } else {
+            res.status(201).json({ message: "Course added successfully!" });
+        }
+    });
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('Server running on http://localhost:3000');
 });
