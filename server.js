@@ -20,6 +20,19 @@ app.use(session({
   saveUninitialized: false
 }));
 
+app.get('/api/courses', (req, res) => {
+    const query = "SELECT courseCode, courseName, instructor, status FROM courses";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching courses:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json(results); 
+        }
+    });
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('Server running on http://localhost:3000');
 });
