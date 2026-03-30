@@ -197,5 +197,45 @@
       </div>
     </main>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        // Call your Node.js backend route
+        fetch('/api/courses')
+          .then(response => response.json())
+          .then(data => {
+            const tableBody = document.getElementById('course-table-body');
+            let rowsHTML = '';
+
+            // Loop through the data from MySQL
+            data.forEach(course => {
+              const statusClass = course.status.toLowerCase() === 'active' ? 'active' : 'inactive';
+              const displayStatus = course.status.charAt(0).toUpperCase() + course.status.slice(1);
+
+              // Build the dynamic HTML row
+              rowsHTML += `
+                <tr>
+                  <td>${course.courseCode}</td>
+                  <td>${course.courseName}</td>
+                  <td>${course.instructor}</td>
+                  <td><span class="status ${statusClass}">${displayStatus}</span></td>
+                  <td>
+                    <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
+                    <a href="#" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
+                  </td>
+                </tr>
+              `;
+            });
+
+            // Put the HTML on the page
+            tableBody.innerHTML = rowsHTML;
+          })
+          .catch(error => {
+            console.error("Error loading courses:", error);
+            document.getElementById('course-table-body').innerHTML = "<tr><td colspan='5' style='text-align: center; color: red;'>Failed to load courses from the database. Make sure your Node server is running!</td></tr>";
+          });
+      });
+    </script>
+
   </body>
 </html>
