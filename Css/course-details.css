@@ -18,3 +18,17 @@ body {
 .assessment-link:hover {
   text-decoration: underline;
 }
+body.dark-mode {
+  background: #121212 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .summary-box {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .assessment-link {
+  color: #f0f0f0 !important;
+}

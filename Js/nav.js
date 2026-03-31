@@ -2,12 +2,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("hamburger");
   const navLinks = document.getElementById("nav-links");
 
-  console.log("hamburger:", hamburger);
-  console.log("navLinks:", navLinks);
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+    });
+  }
 
-  if (!hamburger || !navLinks) return;
+  // Dark mode toggle
+  const toggle = document.getElementById("darkModeToggle");
+  if (toggle) {
+    // Load saved preference
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark-mode");
+    }
 
-  hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-  });
+    toggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode",
+        document.body.classList.contains("dark-mode")
+      );
+    });
+  }
 });

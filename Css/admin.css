@@ -172,3 +172,41 @@ main {
     white-space: nowrap;
   }
 }
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .table-container {
+  background-color: #1e1e1e !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .data-table th {
+  background-color: #2a2a2a !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .data-table td {
+  border-color: #333 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .data-table tbody tr:hover {
+  background-color: #2a2a2a !important;
+}
+
+body.dark-mode .add-btn {
+  background-color: #2a2a2a !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .status.active {
+  background-color: #1a3a1a !important;
+  color: #6fcf6f !important;
+}
+
+body.dark-mode .status.inactive {
+  background-color: #3a1a1a !important;
+  color: #ff6b6b !important;
+}

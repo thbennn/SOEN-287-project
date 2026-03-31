@@ -24,3 +24,7 @@ body {
 .nav-link-custom:hover {
   color: #5c2d91;
 }
+body.dark-mode {
+  background: #121212 !important;
+  color: #f0f0f0 !important;
+}
