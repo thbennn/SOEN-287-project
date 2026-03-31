@@ -117,3 +117,17 @@ body {
   background-color: rgba(255, 255, 255, 0.4);
 }
   
+.overview-link {
+  color: inherit;
+}
+
+.course-card:hover .overview-link,
+.course-card:hover .course-title,
+.course-card:hover .course-desc,
+.course-card:hover .avg-label,
+.course-card:hover .avg-value,
+.course-card:hover .completion-label,
+.course-card:hover .completion-percent,
+.course-card:hover .remove-overview-btn {
+  color: white !important;
+}
