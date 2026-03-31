@@ -41,7 +41,7 @@
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
           <li class="phone-only">
-            <a href="login.html" class="logout">Log Out</a>
+            <a href="/api/auth/logout" class="logout">Log Out</a>
           </li>
         </ul>
 
@@ -52,7 +52,7 @@
             <li><a href="#">Settings & Privacy</a></li>
             <li><a href="#">Help & Support</a></li>
             <li><a href="#">Dark/Light Mode</a></li>
-            <li><a href="login.html" class="logout">Log Out</a></li>
+            <li><a href="/api/auth/logout" class="logout">Log Out</a></li>
           </ul>
         </div>
       </nav>
@@ -125,7 +125,52 @@
   </div>
     
 
-  
+  <script>
+  // Load current user data when page opens
+  window.addEventListener('DOMContentLoaded', async () => {
+    const res = await fetch('/api/auth/profile');
+    if (!res.ok) return;
+    const user = await res.json();
+
+    document.querySelector('[placeholder="First name"]').value = user.firstName || '';
+    document.querySelector('[placeholder="Last name"]').value = user.lastName || '';
+    document.querySelector('[placeholder="Email"]').value = user.email || '';
+    document.querySelector('[placeholder="Phone number"]').value = user.phone || '';
+    document.querySelector('[placeholder="Student ID"]').value = user.studentId || '';
+    if (user.dob) {
+      document.querySelector('[type="date"]').value = user.dob.split('T')[0];
+    }
+  });
+
+  // Save changes
+  document.querySelector('button[type="submit"]').addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const newPassword = document.getElementById('passwordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+    if (newPassword && newPassword !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    const data = {
+      email: document.querySelector('[placeholder="Email"]').value,
+      phone: document.querySelector('[placeholder="Phone number"]').value,
+      dob: document.querySelector('[type="date"]').value,
+      newPassword: newPassword || null
+    };
+
+    const res = await fetch('/api/auth/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    alert(result.message);
+  });
+</script>
 
   </body>
 </html>

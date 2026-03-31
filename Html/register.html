@@ -54,6 +54,52 @@
 
   </div>
 
+  <script>
+  document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.querySelector('[name="password"]').value;
+    const confirmPassword = document.querySelector('[name="confirm-password"]').value;
+
+  // Check passwords match
+  if (password !== confirmPassword) {
+    alert('Passwords do not match!');
+    return;
+  }
+
+  // Check password length
+  if (password.length < 6) {
+    alert('Password must be at least 6 characters!');
+    return;
+  }
+
+    const data = {
+      firstName: document.querySelector('[name="first-name"]').value,
+      lastName: document.querySelector('[name="last-name"]').value,
+      email: document.querySelector('[name="email"]').value,
+      password: document.querySelector('[name="password"]').value,
+      phone: document.querySelector('[name="phone"]').value,
+      dob: document.querySelector('[name="dob"]').value,
+      studentId: document.querySelector('[name="student-id"]').value,
+      role: document.querySelector('[name="role"]').value
+    };
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      alert('Registration successful!');
+      window.location.href = 'login.html';
+    } else {
+      alert(result.message);
+    }
+  });
+</script>
+
   
 </body>
 </html>
