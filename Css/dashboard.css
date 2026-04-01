@@ -116,4 +116,35 @@ body {
 .progress {
   background-color: rgba(255, 255, 255, 0.4);
 }
+body.dark-mode {
+  background-color: #121212 !important;
+}
+
+body.dark-mode .course-card {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode #course-1 { background-color: rgba(22, 73, 154, 0.4) !important; }
+body.dark-mode #course-2 { background-color: rgba(221, 0, 49, 0.4) !important; }
+body.dark-mode #course-3 { background-color: rgba(92, 45, 145, 0.4) !important; }
+body.dark-mode #course-4 { background-color: rgba(93, 171, 36, 0.4) !important; }
+body.dark-mode #course-5 { background-color: rgba(249, 174, 65, 0.4) !important; }
+body.dark-mode #course-6 { background-color: rgba(255, 255, 255, 0.1) !important; }
+
+body.dark-mode .avg-label,
+body.dark-mode .completion-label,
+body.dark-mode .completion-percent,
+body.dark-mode .avg-value {
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode #Course-Overview {
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode hr {
+  border-color: #333 !important;
+}
   
