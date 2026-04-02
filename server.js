@@ -13,40 +13,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.get('/api/courses', (req, res) => {
-    const query = "SELECT courseCode, courseName, instructor, status FROM courses";
-    
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error("Error fetching courses:", err);
-            res.status(500).json({ error: "Internal Server Error" });
-        } else {
-            res.json(results); 
-        }
-    });
-});
-
-app.post('/api/courses', (req, res) => {
-    const { courseCode, courseName, instructor, status } = req.body;
-    
-    //TEMPORARY: Hardcode a userId
-    const userId = 1; 
-
-    const query = `
-      INSERT INTO courses (userId, courseCode, courseName, instructor, status) 
-      VALUES (?, ?, ?, ?, ?)
-    `;
-
-    db.query(query, [userId, courseCode, courseName, instructor, status], (err, results) => {
-        if (err) {
-            console.error("Error inserting course:", err);
-            res.status(500).json({ error: "Failed to add course" });
-        } else {
-            res.status(201).json({ message: "Course added successfully!" });
-        }
-    });
-});
-
 app.get('/dashboard.html', isAuthenticated, (req, res) => {
   res.sendFile(__dirname + '/Html/dashboard.html');
 });
@@ -78,8 +44,11 @@ app.use(express.static('Html'));
 app.use('/Css', express.static('Css'));
 app.use('/Js', express.static('Js'));
 app.use('/Photos', express.static('Photos'));
+
 const authRoutes = require('./server/routes/auth');
 app.use('/api/auth', authRoutes);
+const courseRoutes = require('./server/routes/courses');
+app.use('/api/courses', courseRoutes);
 
 
 app.listen(process.env.PORT || 3000, () => {
