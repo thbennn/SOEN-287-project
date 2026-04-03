@@ -79,7 +79,8 @@
     <div class="table-container">
       <div class="table-header">
         <h2>Managed Users</h2>
-        <a href="#" class="add-btn">
+        <a href="#" class="add-btn" data-bs-toggle="modal"
+            data-bs-target="#addUserModal">
           <i class="fa-solid fa-plus"></i> Add User
         </a>
       </div>
@@ -89,50 +90,139 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Program</th>
+            <th>Role</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
 
-        <tbody>
-          <tr>
-            <td>Krish</td>
-            <td>Patel</td>
-            <td>krish@gmail.com</td>
-            <td>Electrical Engineering</td>
-            <td><span class="status active">Active</span></td>
-            <td>
-              <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
-              <a href="#" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <td>Ben</td>
-            <td>Ten</td>
-            <td>ben@gmail.com</td>
-            <td>Computer Engineering</td>
-            <td><span class="status active">Active</span></td>
-            <td>
-              <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
-              <a href="#" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <td>Daniel</td>
-            <td>Messiha</td>
-            <td>daniel@gmail.com</td>
-            <td>Software Engineering</td>
-            <td><span class="status inactive">Inactive</span></td>
-            <td>
-              <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
-              <a href="#" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
-            </td>
-          </tr>
+        <tbody id="user-table-body">
         </tbody>
+
       </table>
     </div>
   </main>
+
+  <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="add-user-form">
+              <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="e.g. John" required>
+              </div>
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="e.g. Doe" required>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="e.g. example@domain.com" required>
+              </div>
+              <div class="mb-3">
+                <label for="userPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="userPassword" placeholder="e.g. MyPassword123!" required>
+              </div>
+              <div class="mb-3">
+                <label for="userRole" class="form-label">Role</label>
+                <select class="form-select" id="userRole">
+                  <option value="student" selected>Student</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status">
+                  <option value="active" selected>Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Save User</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        fetch('/api/users')
+          .then(response => response.json())
+          .then(data => {
+            const tableBody = document.getElementById('user-table-body');
+            let rowsHTML = '';
+
+            data.forEach(user => {
+              const roleClass = user.role.toLowerCase() === 'student' ? 'student' : 'admin';
+              const displayRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+              const statusClass = user.status.toLowerCase() === 'active' ? 'active' : 'inactive';
+              const displayStatus = user.status.charAt(0).toUpperCase() + user.status.slice(1);
+
+              rowsHTML += `
+                <tr>
+                  <td>${user.firstName}</td>
+                  <td>${user.lastName}</td>
+                  <td>${user.email}</td>
+                  <td><span class="role ${roleClass}">${displayRole}</span></td>
+                  <td><span class="status ${statusClass}">${displayStatus}</span></td>
+                  <td>
+                    <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
+                    <a href="#" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
+                  </td>
+                </tr>
+              `;
+            });
+
+            tableBody.innerHTML = rowsHTML;
+          })
+          .catch(error => {
+            console.error("Error loading users:", error);
+            document.getElementById('user-table-body').innerHTML = "<tr><td colspan='5' style='text-align: center; color: red;'>Failed to load users from the database. Make sure your Node server is running!</td></tr>";
+          });
+      });
+
+      const addUserForm = document.getElementById('add-user-form');
+
+      addUserForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const newUserData = {
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('userPassword').value,
+          role: document.getElementById('userRole').value,
+          status: document.getElementById('status').value
+        };
+
+        fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newUserData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.message) {
+            alert("user added successfully!");
+            window.location.reload(); 
+          } else {
+            alert("Error adding user.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Something went wrong.");
+        });
+      });
+    </script>
 
 </body>
 

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
-router.get('/', (req, res) => {
+router.get('/', isAuthenticated, (req, res) => {
     const query = "SELECT id, courseCode, courseName, instructor, status FROM courses";
     
     db.query(query, (err, results) => {
@@ -15,7 +16,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', isAuthenticated, isAdmin, (req, res) => {
     const { courseCode, courseName, instructor, status } = req.body;
     
     const userId = req.session.user.id; 

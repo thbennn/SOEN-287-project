@@ -49,6 +49,8 @@ const authRoutes = require('./server/routes/auth');
 app.use('/api/auth', authRoutes);
 const courseRoutes = require('./server/routes/courses');
 app.use('/api/courses', courseRoutes);
+const userRoutes = require('./server/routes/users');
+app.use('/api/users', userRoutes);
 
 
 app.listen(process.env.PORT || 3000, () => {
