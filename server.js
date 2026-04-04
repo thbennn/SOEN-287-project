@@ -41,14 +41,9 @@ app.get("/adminManageCourses.html", isAuthenticated, isAdmin, (req, res) => {
 app.get("/adminStatistics.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(__dirname + "/Html/adminStatistics.html");
 });
-app.get(
-  "/adminManageAssessments.html",
-  isAuthenticated,
-  isAdmin,
-  (req, res) => {
+app.get("/adminManageAssessments.html", isAuthenticated, isAdmin, (req, res) => {
     res.sendFile(__dirname + "/Html/adminManageAssessments.html");
-  },
-);
+});
 
 app.use(express.static("Html"));
 app.use("/Css", express.static("Css"));
@@ -63,6 +58,8 @@ const userRoutes = require("./server/routes/users");
 app.use("/api/users", userRoutes);
 const assessmentRoutes = require("./server/routes/assessments");
 app.use("/api/assessments", assessmentRoutes);
+const statisticsRoutes = require("./server/routes/statistics");
+app.use("/api/statistics", statisticsRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running on http://localhost:3000");

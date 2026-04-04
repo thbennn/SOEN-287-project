@@ -62,24 +62,133 @@
     </header>    
   <main>
     <div class="admin-nav">
-      <a href="adminManageUsers.html" class="add-btn">
-        <i class="fa-solid fa-users-gear"></i> Manage Users
-      </a>
-      <a href="adminManageCourses.html" class="add-btn">
-        <i class="fa-solid fa-book"></i> Manage Courses
-      </a>
-      <a href="adminStatistics.html" class="add-btn">
-        <i class="fa-solid fa-chart-column"></i> View Statistics
-      </a>
+      <a href="adminManageUsers.html" class="add-btn"><i class="fa-solid fa-users-gear"></i> Manage Users</a>
+      <a href="adminManageCourses.html" class="add-btn"><i class="fa-solid fa-book"></i> Manage Courses</a>
+      <a href="adminStatistics.html" class="add-btn"><i class="fa-solid fa-chart-column"></i> View Statistics</a>
     </div>
 
     <div class="table-container">
-      <div class="table-header">
+      <div class="table-header mb-4">
         <h2>Statistics</h2>
       </div>
-      <img class="statistic-table" src="../Photos/Statistic.png" alt="Statistics">
+      
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Users by Role</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="usersChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Courses by Status</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="coursesChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Assessments by Type</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="assessmentsTypeChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Assessments by Status</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="assessmentsStatusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("/api/statistics")
+        .then(response => response.json())
+        .then(data => {
+
+          const getChartData = (dataArray, labelKey) => {
+            return {
+              labels: dataArray.map(item => item[labelKey].charAt(0).toUpperCase() + item[labelKey].slice(1)), // Capitalizes first letter
+              values: dataArray.map(item => item.count)
+            };
+          };
+
+          const userData = getChartData(data.users || [], 'role');
+          new Chart(document.getElementById('usersChart'), {
+            type: 'doughnut',
+            data: {
+              labels: userData.labels,
+              datasets: [{
+                data: userData.values,
+                backgroundColor: ['#0d6efd', '#6c757d'], // Blue and Grey
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+          });
+
+          const courseData = getChartData(data.courses || [], 'status');
+          new Chart(document.getElementById('coursesChart'), {
+            type: 'pie',
+            data: {
+              labels: courseData.labels,
+              datasets: [{
+                data: courseData.values,
+                backgroundColor: ['#198754', '#dc3545'], // Green and Red
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+          });
+
+          const assessTypeData = getChartData(data.assessmentTypes || [], 'type');
+          new Chart(document.getElementById('assessmentsTypeChart'), {
+            type: 'bar',
+            data: {
+              labels: assessTypeData.labels,
+              datasets: [{
+                label: 'Number of Assessments',
+                data: assessTypeData.values,
+                backgroundColor: '#0dcaf0', // Cyan
+                borderRadius: 5
+              }]
+            },
+            options: { 
+              responsive: true, 
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } }
+            }
+          });
+
+          const assessStatusData = getChartData(data.assessmentStatus || [], 'status');
+          new Chart(document.getElementById('assessmentsStatusChart'), {
+            type: 'doughnut',
+            data: {
+              labels: assessStatusData.labels,
+              datasets: [{
+                data: assessStatusData.values,
+                backgroundColor: ['#ffc107', '#20c997'], // Yellow and Teal
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+          });
+
+        })
+        .catch(error => console.error("Error loading statistics:", error));
+    });
+  </script>
 
 </body>
 
