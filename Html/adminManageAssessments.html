@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="../Css/nav.css" />
+    <link rel="stylesheet" href="../Css/admin.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Js/nav.js" defer></script>
+
+    <title>Admin - Manage Assessments</title>
+  </head>
+
+  <body>
+    <header class="navbar-container">
+      <nav class="navbar">
+        <div class="nav-logo">
+          <a href="dashboard.html"
+            ><img src="../Photos/logo.png" alt="University logo"
+          /></a>
+        </div>
+
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="dashboard.html">Home</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="my courses.html">My courses</a></li>
+          <li><a href="adminManageUsers.html">Admin</a></li>
+          <li class="phone-only"><a href="#">Edit Profile</a></li>
+          <li class="phone-only"><a href="#">Settings & Privacy</a></li>
+          <li class="phone-only">
+            <a href="login.html" class="logout">Log Out</a>
+          </li>
+        </ul>
+
+        <div class="profile-dropdown">
+          <i class="fa-solid fa-circle-user profile-icon"></i>
+          <ul class="dropdown-menu-custom">
+            <li><a href="edit_profile.html">Edit Profile</a></li>
+            <li><a href="#">Settings & Privacy</a></li>
+            <li><a href="#">Help & Support</a></li>
+            <li><a href="#" id="darkModeToggle">Dark/Light Mode</a></li>
+            <li><a href="/api/auth/logout" class="logout">Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="admin-nav">
+        <a href="adminManageUsers.html" class="add-btn"
+          ><i class="fa-solid fa-users-gear"></i> Manage Users</a
+        >
+        <a href="adminManageCourses.html" class="add-btn"
+          ><i class="fa-solid fa-book"></i> Manage Courses</a
+        >
+        <a href="adminStatistics.html" class="add-btn"
+          ><i class="fa-solid fa-chart-column"></i> View Statistics</a
+        >
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h2 id="page-title">Manage Assessments</h2>
+          <div class="header-buttons">
+            <a href="adminManageCourses.html" class="add-btn"
+              ><i class="fa-solid fa-arrow-left"></i> Back to Courses</a
+            >
+            <a
+              href="#"
+              class="add-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#addAssessmentModal"
+              ><i class="fa-solid fa-plus"></i> Add Assessment</a
+            >
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Due Date</th>
+              <th>Total Marks</th>
+              <th>Weight (%)</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="assessment-table-body"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <div
+      class="modal fade"
+      id="addAssessmentModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Assessment</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="add-assessment-form">
+              <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="addTitle"
+                  placeholder="e.g. Midterm Exam"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" id="addType" required>
+                  <option value="assignment">Assignment</option>
+                  <option value="lab">Lab</option>
+                  <option value="quiz">Quiz</option>
+                  <option value="exam">Exam</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="addDueDate" />
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label">Total Marks</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    id="addTotalMarks"
+                    placeholder="100"
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">Weight</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    id="addWeight"
+                    placeholder="25.0"
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="addStatus">
+                  <option value="pending" selected>Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Save Assessment
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="editAssessmentModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Assessment</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-assessment-form">
+              <input type="hidden" id="editAssessmentId" />
+              <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editTitle"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" id="editType" required>
+                  <option value="assignment">Assignment</option>
+                  <option value="lab">Lab</option>
+                  <option value="quiz">Quiz</option>
+                  <option value="exam">Exam</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="editDueDate" />
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label">Total Marks</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    id="editTotalMarks"
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">Weight</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    id="editWeight"
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="editStatus">
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Update Assessment
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const courseId = urlParams.get("courseId");
+      const courseCode = urlParams.get("courseCode");
+
+      if (!courseId) {
+        alert("No Course ID provided. Redirecting to courses page.");
+        window.location.href = "adminManageCourses.html";
+      }
+
+      document.getElementById("page-title").innerText =
+        `Assessments for ${courseCode || "Course"}`;
+
+      // Load Assessments
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch(`/api/assessments?courseId=${courseId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.getElementById("assessment-table-body");
+            let rowsHTML = "";
+
+            if (data.length === 0) {
+              tableBody.innerHTML =
+                "<tr><td colspan='7' class='text-center'>No assessments found for this course.</td></tr>";
+              return;
+            }
+
+            data.forEach((assessment) => {
+              const displayDate = assessment.dueDate
+                ? assessment.dueDate.split("T")[0]
+                : "N/A";
+              const statusClass =
+                assessment.status === "completed" ? "active" : "inactive";
+
+              rowsHTML += `
+                <tr>
+                  <td>${assessment.title}</td>
+                  <td style="text-transform: capitalize;">${assessment.type}</td>
+                  <td>${displayDate}</td>
+                  <td>${assessment.totalMarks || "N/A"}</td>
+                  <td>${assessment.weight || "N/A"}</td>
+                  <td><span class="status ${statusClass}">${assessment.status.charAt(0).toUpperCase() + assessment.status.slice(1)}</span></td>
+                  <td>
+                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editAssessmentModal" 
+                       data-id="${assessment.id}" data-title="${assessment.title}" data-type="${assessment.type}" 
+                       data-date="${displayDate}" data-marks="${assessment.totalMarks || ""}" 
+                       data-weight="${assessment.weight || ""}" data-status="${assessment.status}">
+                       <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="#" class="action-btn delete" data-id="${assessment.id}" data-title="${assessment.title}"><i class="fa-solid fa-trash"></i></a>
+                  </td>
+                </tr>
+              `;
+            });
+            tableBody.innerHTML = rowsHTML;
+          })
+          .catch((error) => console.error("Error loading assessments:", error));
+      });
+
+      document
+        .getElementById("add-assessment-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const payload = {
+            courseId: courseId,
+            title: document.getElementById("addTitle").value,
+            type: document.getElementById("addType").value,
+            dueDate: document.getElementById("addDueDate").value || null,
+            totalMarks: document.getElementById("addTotalMarks").value || null,
+            weight: document.getElementById("addWeight").value || null,
+            status: document.getElementById("addStatus").value,
+          };
+
+          fetch("/api/assessments", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.message === "Assessment added successfully!") {
+                window.location.reload();
+              } else alert(data.message || "Error adding assessment");
+            });
+        });
+
+      document
+        .getElementById("assessment-table-body")
+        .addEventListener("click", function (e) {
+          const editBtn = e.target.closest(".edit");
+          if (editBtn) {
+            document.getElementById("editAssessmentId").value =
+              editBtn.dataset.id;
+            document.getElementById("editTitle").value = editBtn.dataset.title;
+            document.getElementById("editType").value = editBtn.dataset.type;
+            document.getElementById("editDueDate").value =
+              editBtn.dataset.date !== "N/A" ? editBtn.dataset.date : "";
+            document.getElementById("editTotalMarks").value =
+              editBtn.dataset.marks;
+            document.getElementById("editWeight").value =
+              editBtn.dataset.weight;
+            document.getElementById("editStatus").value =
+              editBtn.dataset.status;
+          }
+        });
+
+      document
+        .getElementById("edit-assessment-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const id = document.getElementById("editAssessmentId").value;
+          const payload = {
+            title: document.getElementById("editTitle").value,
+            type: document.getElementById("editType").value,
+            dueDate: document.getElementById("editDueDate").value || null,
+            totalMarks: document.getElementById("editTotalMarks").value || null,
+            weight: document.getElementById("editWeight").value || null,
+            status: document.getElementById("editStatus").value,
+          };
+
+          fetch(`/api/assessments/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.message === "Assessment updated successfully!") {
+                window.location.reload();
+              } else alert(data.message || "Error updating assessment");
+            });
+        });
+
+      document
+        .getElementById("assessment-table-body")
+        .addEventListener("click", function (e) {
+          const deleteBtn = e.target.closest(".delete");
+          if (deleteBtn) {
+            e.preventDefault();
+            const id = deleteBtn.dataset.id;
+            const title = deleteBtn.dataset.title;
+
+            if (
+              confirm(
+                `Are you sure you want to delete the assessment: "${title}"?`,
+              )
+            ) {
+              fetch(`/api/assessments/${id}`, {
+                method: "DELETE",
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.message === "Assessment deleted successfully") {
+                    window.location.reload();
+                  } else alert(data.message || "Error deleting assessment");
+                });
+            }
+          }
+        });
+    </script>
+  </body>
+</html>

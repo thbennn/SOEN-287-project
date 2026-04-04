@@ -1,40 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet">
-    <link rel="stylesheet"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
       integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-    <link rel="stylesheet" href="../Css/nav.css">
-    <link rel="stylesheet" href="../Css/admin.css">
+    <link rel="stylesheet" href="../Css/nav.css" />
+    <link rel="stylesheet" href="../Css/admin.css" />
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet" />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Js/nav.js" defer></script>
     <title>Admin - Manage Users</title>
-
   </head>
 
   <body>
     <header class="navbar-container">
       <nav class="navbar">
-
         <div class="nav-logo">
-          <a href="dashboard.html"> <img src="../Photos/logo.png"
-              alt="University logo"> </a>
+          <a href="dashboard.html">
+            <img src="../Photos/logo.png" alt="University logo" />
+          </a>
         </div>
 
         <div class="hamburger" id="hamburger">
@@ -50,8 +52,9 @@
           <li><a href="adminManageUsers.html">Admin</a></li>
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
-          <li class="phone-only"><a href="login.html" class="logout">Log
-              Out</a></li>
+          <li class="phone-only">
+            <a href="login.html" class="logout">Log Out</a>
+          </li>
         </ul>
 
         <div class="profile-dropdown">
@@ -83,8 +86,12 @@
       <div class="table-container">
         <div class="table-header">
           <h2>Managed Users</h2>
-          <a href="#" class="add-btn" data-bs-toggle="modal"
-            data-bs-target="#addUserModal">
+          <a
+            href="#"
+            class="add-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#addUserModal"
+          >
             <i class="fa-solid fa-plus"></i> Add User
           </a>
         </div>
@@ -102,52 +109,84 @@
             </tr>
           </thead>
 
-          <tbody id="user-table-body">
-          </tbody>
-
+          <tbody id="user-table-body"></tbody>
         </table>
       </div>
     </main>
 
-    <div class="modal fade" id="addUserModal" tabindex="-1"
-      aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="addUserModal"
+      tabindex="-1"
+      aria-labelledby="addUserModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-              aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
             <form id="add-user-form">
               <div class="mb-3">
                 <label for="firstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="firstName"
-                  placeholder="e.g. John" required>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  placeholder="e.g. John"
+                  required
+                />
               </div>
               <div class="mb-3">
                 <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="lastName"
-                  placeholder="e.g. Doe" required>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  placeholder="e.g. Doe"
+                  required
+                />
               </div>
               <div class="mb-3">
                 <label for="dob" class="form-label">Date of Birth</label>
-                <input type="date" class="form-control" id="dob" required>
+                <input type="date" class="form-control" id="dob" required />
               </div>
               <div class="mb-3">
                 <label for="phone" class="form-label">Phone number</label>
-                <input type="tel" class="form-control" id="phone"
-                  placeholder="e.g. 999-999-9999" required>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone"
+                  placeholder="e.g. 999-999-9999"
+                  required
+                />
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email"
-                  placeholder="e.g. example@domain.com" required>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  placeholder="e.g. example@domain.com"
+                  required
+                />
               </div>
               <div class="mb-3">
                 <label for="userPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="userPassword"
-                  placeholder="e.g. MyPassword123!" required>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="userPassword"
+                  placeholder="e.g. MyPassword123!"
+                  required
+                />
               </div>
               <div class="mb-3">
                 <label for="userRole" class="form-label">Role</label>
@@ -163,8 +202,88 @@
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary w-100">Save
-                User</button>
+              <button type="submit" class="btn btn-primary w-100">
+                Save User
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-user-form">
+              <input type="hidden" id="editUserId" />
+
+              <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editFirstName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editLastName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="editDob" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone number</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="editPhone"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="editEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-select" id="editRole">
+                  <option value="student">Student</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="editStatus">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Update User
+              </button>
             </form>
           </div>
         </div>
@@ -172,26 +291,29 @@
     </div>
 
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/users")
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.getElementById("user-table-body");
+            let rowsHTML = "";
 
-      fetch('/api/users')
-        .then(response => response.json())
-        .then(data => {
-          const tableBody = document.getElementById('user-table-body');
-          let rowsHTML = '';
+            data.forEach((user) => {
+              const roleClass =
+                user.role.toLowerCase() === "student" ? "student" : "admin";
+              const displayRole =
+                user.role.charAt(0).toUpperCase() + user.role.slice(1);
+              const statusClass =
+                user.status.toLowerCase() === "active" ? "active" : "inactive";
+              const displayStatus =
+                user.status.charAt(0).toUpperCase() + user.status.slice(1);
 
-          data.forEach(user => {
-            const roleClass = user.role.toLowerCase() === 'student' ? 'student' : 'admin';
-            const displayRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-            const statusClass = user.status.toLowerCase() === 'active' ? 'active' : 'inactive';
-            const displayStatus = user.status.charAt(0).toUpperCase() + user.status.slice(1);
+              let displayDob = "N/A";
+              if (user.dob) {
+                displayDob = user.dob.split("T")[0];
+              }
 
-            let displayDob = 'N/A';
-            if (user.dob) {
-              displayDob = user.dob.split('T')[0];
-            }
-
-            rowsHTML += `
+              rowsHTML += `
                 <tr>
                   <td>${user.firstName}</td>
                   <td>${user.lastName}</td>
@@ -201,92 +323,167 @@
                   <td><span class="role ${roleClass}">${displayRole}</span></td>
                   <td><span class="status ${statusClass}">${displayStatus}</span></td>
                   <td>
-                    <a href="#" class="action-btn"><i class="fa-solid fa-pen"></i></a>
+                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editUserModal" data-id="${user.id}" data-firstname="${user.firstName}" data-lastname="${user.lastName}" data-email="${user.email}" data-phone="${user.phone}" data-dob="${displayDob}" data-role="${user.role}" data-status="${user.status}"><i class="fa-solid fa-pen"></i></a>
                     <a href="#" class="action-btn delete" data-id="${user.id}" data-firstname="${user.firstName}" data-lastname="${user.lastName}"><i class="fa-solid fa-trash"></i></a>
                   </td>
                 </tr>
               `;
+            });
+
+            tableBody.innerHTML = rowsHTML;
+          })
+          .catch((error) => {
+            console.error("Error loading users:", error);
+            document.getElementById("user-table-body").innerHTML =
+              "<tr><td colspan='5' style='text-align: center; color: red;'>Failed to load users from the database. Make sure your Node server is running!</td></tr>";
           });
+      });
 
-          tableBody.innerHTML = rowsHTML;
-        })
-        .catch(error => {
-          console.error("Error loading users:", error);
-          document.getElementById('user-table-body').innerHTML = "<tr><td colspan='5' style='text-align: center; color: red;'>Failed to load users from the database. Make sure your Node server is running!</td></tr>";
-        });
-    });
+      const addUserForm = document.getElementById("add-user-form");
 
-    const addUserForm = document.getElementById('add-user-form');
-
-    addUserForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const newUserData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        dob: document.getElementById('dob').value,
-        password: document.getElementById('userPassword').value,
-        role: document.getElementById('userRole').value,
-        status: document.getElementById('status').value
-      };
-
-      fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserData)
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.message) {
-            alert("user added successfully!");
-            window.location.reload();
-          } else {
-            alert("Error adding user.");
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("Something went wrong.");
-        });
-    });
-
-    document.getElementById('user-table-body').addEventListener('click', function (event) {
-      const deleteBtn = event.target.closest('.delete');
-
-      if (deleteBtn) {
+      addUserForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const userId = deleteBtn.getAttribute('data-id');
-        const firstName = deleteBtn.getAttribute('data-firstName');
-        const lastName = deleteBtn.getAttribute('data-lastName');
+        const newUserData = {
+          firstName: document.getElementById("firstName").value,
+          lastName: document.getElementById("lastName").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          dob: document.getElementById("dob").value,
+          password: document.getElementById("userPassword").value,
+          role: document.getElementById("userRole").value,
+          status: document.getElementById("status").value,
+        };
 
-        if (confirm("Are you sure you want to delete the user: " + firstName + " " + lastName + "? This cannot be undone.")) {
+        fetch("/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUserData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message) {
+              alert("user added successfully!");
+              window.location.reload();
+            } else {
+              alert("Error adding user.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong.");
+          });
+      });
+
+      document
+        .getElementById("user-table-body")
+        .addEventListener("click", function (event) {
+          const deleteBtn = event.target.closest(".delete");
+
+          if (deleteBtn) {
+            event.preventDefault();
+
+            const userId = deleteBtn.getAttribute("data-id");
+            const firstName = deleteBtn.getAttribute("data-firstName");
+            const lastName = deleteBtn.getAttribute("data-lastName");
+
+            if (
+              confirm(
+                "Are you sure you want to delete the user: " +
+                  firstName +
+                  " " +
+                  lastName +
+                  "? This cannot be undone.",
+              )
+            ) {
+              fetch(`/api/users/${userId}`, {
+                method: "DELETE",
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.message === "User deleted successfully") {
+                    alert(data.message);
+                    window.location.reload();
+                  } else {
+                    alert(data.message || "Error deleting user.");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("Something went wrong.");
+                });
+            }
+          }
+        });
+
+      document
+        .getElementById("user-table-body")
+        .addEventListener("click", function (event) {
+          const editBtn = event.target.closest(".edit");
+
+          if (editBtn) {
+            document.getElementById("editUserId").value =
+              editBtn.getAttribute("data-id");
+            document.getElementById("editFirstName").value =
+              editBtn.getAttribute("data-firstname");
+            document.getElementById("editLastName").value =
+              editBtn.getAttribute("data-lastname");
+            document.getElementById("editEmail").value =
+              editBtn.getAttribute("data-email");
+            document.getElementById("editPhone").value =
+              editBtn.getAttribute("data-phone");
+
+            const dob = editBtn.getAttribute("data-dob");
+            document.getElementById("editDob").value = dob !== "N/A" ? dob : "";
+
+            document.getElementById("editRole").value = editBtn
+              .getAttribute("data-role")
+              .toLowerCase();
+            document.getElementById("editStatus").value = editBtn
+              .getAttribute("data-status")
+              .toLowerCase();
+          }
+        });
+
+      document
+        .getElementById("edit-user-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const userId = document.getElementById("editUserId").value;
+          const updatedUserData = {
+            firstName: document.getElementById("editFirstName").value,
+            lastName: document.getElementById("editLastName").value,
+            email: document.getElementById("editEmail").value,
+            phone: document.getElementById("editPhone").value,
+            dob: document.getElementById("editDob").value,
+            role: document.getElementById("editRole").value,
+            status: document.getElementById("editStatus").value,
+          };
 
           fetch(`/api/users/${userId}`, {
-            method: 'DELETE'
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedUserData),
           })
-            .then(response => response.json())
-            .then(data => {
-              if (data.message === "User deleted successfully") {
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.message === "User updated successfully!") {
                 alert(data.message);
                 window.location.reload();
               } else {
-                alert(data.message || "Error deleting user.");
+                alert(data.message || "Error updating user.");
               }
             })
-            .catch(error => {
+            .catch((error) => {
               console.error("Error:", error);
               alert("Something went wrong.");
             });
-        }
-      }
-    });
-  </script>
-
+        });
+    </script>
   </body>
-
 </html>
