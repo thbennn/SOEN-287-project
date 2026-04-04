@@ -5,7 +5,7 @@ const db = require('../db');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 router.get('/', isAuthenticated, isAdmin, (req, res) => {
-    const query = "SELECT id, firstName, lastName, email, role, status FROM Users";
+    const query = "SELECT id, studentId, firstName, lastName, email, phone, dob, passwordHash, role, status FROM Users";
     
     db.query(query, (err, results) => {
         if (err) {
@@ -18,9 +18,9 @@ router.get('/', isAuthenticated, isAdmin, (req, res) => {
 });
 
 router.post('/', isAuthenticated, isAdmin, (req, res) => {
-    const { firstName, lastName, email, password, role, status } = req.body;
+    const {firstName, lastName, email, phone, dob, password, role, status } = req.body;
     
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !dob) {
         return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -28,14 +28,13 @@ router.post('/', isAuthenticated, isAdmin, (req, res) => {
         if (err) return res.status(500).json({ message: 'Error hashing password' });
 
         const query = `
-          INSERT INTO users (firstName, lastName, email, passwordHash, role, status) 
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO users (firstName, lastName, email, phone, dob, passwordHash, role, status) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        db.query(query, [firstName, lastName, email, hash, role, status], (err, results) => {
+        db.query(query, [firstName, lastName, email, phone, dob, hash, role, status], (err, results) => {
             if (err) {
                 console.error("Error inserting user:", err);
-                // Catch duplicate emails
                 if(err.code === 'ER_DUP_ENTRY') {
                     return res.status(400).json({ message: "Email already exists" });
                 }
