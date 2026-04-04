@@ -18,6 +18,16 @@ router.get('/', isAuthenticated, (req, res) => {
 
 router.post('/', isAuthenticated, isAdmin, (req, res) => {
     const { courseCode, courseName, instructor, status } = req.body;
+
+    if (!courseCode || typeof courseCode !== 'string' || courseCode.trim() === '') {
+        return res.status(400).json({ message: "Valid Course Code is required." });
+    }
+    if (!courseName || typeof courseName !== 'string' || courseName.trim() === '') {
+        return res.status(400).json({ message: "Valid Course Name is required." });
+    }
+    if (status !== 'active' && status !== 'inactive') {
+        return res.status(400).json({ message: "Invalid status value." });
+    }
     
     const userId = req.session.user.id; 
 
