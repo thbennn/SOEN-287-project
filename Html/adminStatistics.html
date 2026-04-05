@@ -108,6 +108,24 @@
             </div>
           </div>
         </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Average Grade per Course (%)</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="avgGradeChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 p-3 shadow-sm border-0">
+            <h5 class="text-center mb-3">Course Completion Rate (%)</h5>
+            <div style="position: relative; height:300px; width:100%">
+              <canvas id="completionChart"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -134,7 +152,7 @@
               labels: userData.labels,
               datasets: [{
                 data: userData.values,
-                backgroundColor: ['#0d6efd', '#6c757d'], // Blue and Grey
+                backgroundColor: ['#0d6efd', '#6c757d'],
               }]
             },
             options: { responsive: true, maintainAspectRatio: false }
@@ -147,7 +165,7 @@
               labels: courseData.labels,
               datasets: [{
                 data: courseData.values,
-                backgroundColor: ['#198754', '#dc3545'], // Green and Red
+                backgroundColor: ['#198754', '#dc3545'],
               }]
             },
             options: { responsive: true, maintainAspectRatio: false }
@@ -161,7 +179,7 @@
               datasets: [{
                 label: 'Number of Assessments',
                 data: assessTypeData.values,
-                backgroundColor: '#0dcaf0', // Cyan
+                backgroundColor: '#0dcaf0',
                 borderRadius: 5
               }]
             },
@@ -179,10 +197,50 @@
               labels: assessStatusData.labels,
               datasets: [{
                 data: assessStatusData.values,
-                backgroundColor: ['#ffc107', '#20c997'], // Yellow and Teal
+                backgroundColor: ['#ffc107', '#20c997'],
               }]
             },
             options: { responsive: true, maintainAspectRatio: false }
+          });
+
+          const avgGradeData = data.courseAverages || [];
+          new Chart(document.getElementById('avgGradeChart'), {
+            type: 'bar',
+            data: {
+              labels: avgGradeData.map(c => c.courseCode),
+              datasets: [{
+                label: 'Average Grade (%)',
+                data: avgGradeData.map(c => c.avgGrade),
+                backgroundColor: '#6f42c1',
+                borderRadius: 5
+              }]
+            },
+            options: { 
+              responsive: true, 
+              maintainAspectRatio: false,
+              scales: { y: { beginAtZero: true, max: 100 } },
+              plugins: { legend: { display: false } }
+            }
+          });
+
+          const completionData = data.courseCompletion || [];
+          new Chart(document.getElementById('completionChart'), {
+            type: 'bar',
+            data: {
+              labels: completionData.map(c => c.courseCode),
+              datasets: [{
+                label: 'Completion Rate (%)',
+                data: completionData.map(c => c.completionRate),
+                backgroundColor: '#fd7e14',
+                borderRadius: 5
+              }]
+            },
+            options: { 
+              responsive: true, 
+              maintainAspectRatio: false,
+              scales: { y: { beginAtZero: true, max: 100 } },
+              plugins: { legend: { display: false } }
+            }
           });
 
         })
