@@ -23,7 +23,7 @@
           <h2>Register</h2>
           <input type="text" name="first-name" placeholder="First name" required>
           <input type="text" name="last-name" placeholder="Last name" required>
-          <input type="text" id="dob" name="dob" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" placeholder="Date of Birth (mm/dd/yyyy)"  required>
+          <input type="date" id="dob" name="dob" required>
           <input type="tel" name="phone" placeholder="Phone number">
           <input type="text" name="student-id" placeholder="Student ID" pattern="[0-9]{8}" maxlength="8">
           <div class="input-wrapper">
@@ -38,11 +38,6 @@
           <input type="password" name="confirm-password" placeholder="Re-enter password" required>
           <i class="fa-solid fa-lock input-icon"></i>
           </div>
-          <select name="role" required>
-            <option value="">---Select Role---</option>
-            <option value="student">Student</option>
-            <option value="admin">Admin</option>
-           </select> 
           <button type="submit" name="register">Register</button>
           <p>Already have an account? <a href="login.html">Login</a></p>
  
@@ -80,7 +75,7 @@
       phone: document.querySelector('[name="phone"]').value,
       dob: document.querySelector('[name="dob"]').value,
       studentId: document.querySelector('[name="student-id"]').value,
-      role: document.querySelector('[name="role"]').value
+      role: 'student'
     };
 
     const res = await fetch('/api/auth/register', {

@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Hide Admin nav link for non-admin users
+  fetch("/api/auth/me")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.role !== "admin") {
+        const adminLink = document.getElementById("admin-nav-link");
+        if (adminLink) adminLink.style.display = "none";
+      }
+    })
+    .catch(() => {}); // silently fail if not logged in
+
   // Dark mode toggle
   const toggle = document.getElementById("darkModeToggle");
   if (toggle) {

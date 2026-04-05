@@ -49,11 +49,11 @@
           <li><a href="dashboard.html">Home</a></li>
           <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="my courses.html">My courses</a></li>
-          <li><a href="adminManageUsers.html">Admin</a></li>
+          <li id="admin-nav-link"><a href="adminManageUsers.html">Admin</a></li>
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
           <li class="phone-only">
-            <a href="login.html" class="logout">Log Out</a>
+            <a href="/api/auth/logout" class="logout">Log Out</a>
           </li>
         </ul>
 
@@ -162,6 +162,15 @@
                 />
               </div>
               <div class="mb-3">
+                <label for="term" class="form-label">Term</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="term"
+                  placeholder="e.g. Fall 2025"
+                />
+              </div>
+              <div class="mb-3">
                 <label for="status" class="form-label">Status</label>
                 <select class="form-select" id="status">
                   <option value="active" selected>Active</option>
@@ -221,6 +230,10 @@
                 <input type="text" class="form-control" id="editInstructor" />
               </div>
               <div class="mb-3">
+                <label class="form-label">Term</label>
+                <input type="text" class="form-control" id="editTerm" placeholder="e.g. Fall 2025" />
+              </div>
+              <div class="mb-3">
                 <label class="form-label">Status</label>
                 <select class="form-select" id="editStatus">
                   <option value="active">Active</option>
@@ -260,7 +273,7 @@
                   <td><span class="status ${statusClass}">${displayStatus}</span></td>
                   <td>
                     <a href="adminManageAssessments.html?courseId=${course.id}&courseCode=${encodeURIComponent(course.courseCode)}" class="action-btn assessments" title="Manage Assessments"> <i class="fa-solid fa-list-check"></i></a>
-                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editCourseModal" data-id="${course.id}" data-coursecode="${course.courseCode}" data-coursename="${course.courseName}" data-instructor="${course.instructor}" data-status="${course.status}"><i class="fa-solid fa-pen"></i></a>
+                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editCourseModal" data-id="${course.id}" data-coursecode="${course.courseCode}" data-coursename="${course.courseName}" data-instructor="${course.instructor}" data-term="${course.term || ''}" data-status="${course.status}"><i class="fa-solid fa-pen"></i></a>
                     <a href="#" class="action-btn delete" data-id="${course.id}" data-coursecode="${course.courseCode}" data-coursename="${course.courseName}"><i class="fa-solid fa-trash"></i></a>
                   </td>
                 </tr>
@@ -285,6 +298,7 @@
           courseCode: document.getElementById("courseCode").value,
           courseName: document.getElementById("courseName").value,
           instructor: document.getElementById("instructor").value,
+          term: document.getElementById("term").value,
           status: document.getElementById("status").value,
         };
 
@@ -365,6 +379,8 @@
               editBtn.getAttribute("data-coursename");
             document.getElementById("editInstructor").value =
               editBtn.getAttribute("data-instructor");
+            document.getElementById("editTerm").value =
+              editBtn.getAttribute("data-term") || "";
 
             const status = editBtn.getAttribute("data-status").toLowerCase();
             document.getElementById("editStatus").value = status;
@@ -381,6 +397,7 @@
             courseCode: document.getElementById("editCourseCode").value,
             courseName: document.getElementById("editCourseName").value,
             instructor: document.getElementById("editInstructor").value,
+            term: document.getElementById("editTerm").value,
             status: document.getElementById("editStatus").value,
           };
 

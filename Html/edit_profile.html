@@ -37,7 +37,7 @@
           <li><a href="dashboard.html">Home</a></li>
           <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="my courses.html">My courses</a></li>
-          <li><a href="adminManageUsers.html">Admin</a></li>
+          <li id="admin-nav-link"><a href="adminManageUsers.html">Admin</a></li>
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
           <li class="phone-only">
@@ -68,11 +68,11 @@
       <div class="form-row">
         <div class="form-group">
           <label>First Name</label>
-          <input type="text"  placeholder="First name" value="Ben" readonly/>
+          <input type="text"  placeholder="First name" readonly/>
         </div>
         <div class="form-group">
           <label>Last Name</label>
-          <input type="text" placeholder="Last name" value="Patel" readonly/>
+          <input type="text" placeholder="Last name" readonly/>
         </div>
       </div>
       
@@ -80,14 +80,14 @@
         <div class="form-group">
           <label>Email</label>
           <div class="input-wrapper">
-            <input type="email" placeholder="Email" value="benpatel123@gmail.com"/>
+            <input type="email" placeholder="Email"/>
             <i class="fa-solid fa-envelope input-icon"></i>
           </div>
         </div>
         <div class="form-group">
           <label>Phone Number</label>
           <div class="input-wrapper">
-            <input type="tel" placeholder="Phone number" value="4387569820" />
+            <input type="tel" placeholder="Phone number" />
             <i class="fa-solid fa-phone input-icon"></i>
           </div>
         </div>
@@ -96,11 +96,11 @@
       <div class="form-row">
         <div class="form-group">
           <label>Student ID</label>
-          <input type="text" placeholder="Student ID" value="40389228" readonly />
+          <input type="text" placeholder="Student ID" readonly />
         </div>
         <div class="form-group">
           <label>Date of Birth</label>
-          <input type="date" placeholder="mm/dd/yyyy" value="07-17-2000"/>
+          <input type="date" />
         </div>
       </div>
       
@@ -127,7 +127,7 @@
 
   <script>
   // Load current user data when page opens
-  window.addEventListener('DOMContentLoaded', async () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const res = await fetch('/api/auth/profile');
     if (!res.ok) return;
     const user = await res.json();

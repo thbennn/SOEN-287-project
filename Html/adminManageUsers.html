@@ -49,11 +49,11 @@
           <li><a href="dashboard.html">Home</a></li>
           <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="my courses.html">My courses</a></li>
-          <li><a href="adminManageUsers.html">Admin</a></li>
+          <li id="admin-nav-link"><a href="adminManageUsers.html">Admin</a></li>
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
           <li class="phone-only">
-            <a href="login.html" class="logout">Log Out</a>
+            <a href="/api/auth/logout" class="logout">Log Out</a>
           </li>
         </ul>
 
@@ -299,14 +299,12 @@
             let rowsHTML = "";
 
             data.forEach((user) => {
-              const roleClass =
-                user.role.toLowerCase() === "student" ? "student" : "admin";
-              const displayRole =
-                user.role.charAt(0).toUpperCase() + user.role.slice(1);
-              const statusClass =
-                user.status.toLowerCase() === "active" ? "active" : "inactive";
-              const displayStatus =
-                user.status.charAt(0).toUpperCase() + user.status.slice(1);
+              const role = user.role || "student";
+              const roleClass = role.toLowerCase() === "student" ? "student" : "admin";
+              const displayRole = role.charAt(0).toUpperCase() + role.slice(1);
+              const status = user.status || "active";
+              const statusClass = status.toLowerCase() === "active" ? "active" : "inactive";
+              const displayStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
               let displayDob = "N/A";
               if (user.dob) {
@@ -362,13 +360,13 @@
           },
           body: JSON.stringify(newUserData),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.message) {
-              alert("user added successfully!");
+          .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
+          .then(({ ok, data }) => {
+            if (ok) {
+              alert("User added successfully!");
               window.location.reload();
             } else {
-              alert("Error adding user.");
+              alert(data.message || "Error adding user.");
             }
           })
           .catch((error) => {
@@ -386,8 +384,8 @@
             event.preventDefault();
 
             const userId = deleteBtn.getAttribute("data-id");
-            const firstName = deleteBtn.getAttribute("data-firstName");
-            const lastName = deleteBtn.getAttribute("data-lastName");
+            const firstName = deleteBtn.getAttribute("data-firstname");
+            const lastName = deleteBtn.getAttribute("data-lastname");
 
             if (
               confirm(

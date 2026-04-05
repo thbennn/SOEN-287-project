@@ -99,6 +99,11 @@ router.get('/logout', (req, res) => {
   });
 });
 
+// GET current user role
+router.get('/me', isAuthenticated, (req, res) => {
+  res.json({ role: req.session.user.role });
+});
+
 // GET PROFILE - load current user data
 router.get('/profile', isAuthenticated, (req, res) => {
   const userId = req.session.user.id;

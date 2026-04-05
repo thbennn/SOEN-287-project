@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
-router.get("/", isAuthenticated, isAdmin, (req, res) => {
+router.get("/", isAuthenticated, (req, res) => {
   const courseId = req.query.courseId;
   let query = "SELECT * FROM assessments";
   let params = [];
@@ -23,7 +23,7 @@ router.get("/", isAuthenticated, isAdmin, (req, res) => {
 });
 
 router.post("/", isAuthenticated, isAdmin, (req, res) => {
-  const { courseId, title, type, dueDate, totalMarks, weight, status } =
+  const { courseId, title, type, dueDate, totalMarks, earnedMarks, weight, status } =
     req.body;
 
   if (!courseId || !title || !type) {
@@ -52,8 +52,8 @@ router.post("/", isAuthenticated, isAdmin, (req, res) => {
     }
 
     const insertQuery = `
-      INSERT INTO assessments (courseId, title, type, dueDate, totalMarks, weight, status) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO assessments (courseId, title, type, dueDate, totalMarks, earnedMarks, weight, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
@@ -64,6 +64,7 @@ router.post("/", isAuthenticated, isAdmin, (req, res) => {
         type,
         dueDate || null,
         totalMarks || null,
+        earnedMarks || 0,
         incomingWeight || null,
         status || "pending",
       ],
@@ -96,7 +97,7 @@ router.delete("/:id", isAuthenticated, isAdmin, (req, res) => {
 
 router.put("/:id", isAuthenticated, isAdmin, (req, res) => {
   const assessmentId = req.params.id;
-  const { title, type, dueDate, totalMarks, weight, status } = req.body;
+  const { title, type, dueDate, totalMarks, earnedMarks, weight, status } = req.body;
   const incomingWeight = parseFloat(weight) || 0;
 
   const getCourseIdQuery = "SELECT courseId FROM assessments WHERE id = ?";
@@ -123,8 +124,8 @@ router.put("/:id", isAuthenticated, isAdmin, (req, res) => {
       }
 
       const updateQuery = `
-        UPDATE assessments 
-        SET title = ?, type = ?, dueDate = ?, totalMarks = ?, weight = ?, status = ? 
+        UPDATE assessments
+        SET title = ?, type = ?, dueDate = ?, totalMarks = ?, earnedMarks = ?, weight = ?, status = ?
         WHERE id = ?
       `;
 
@@ -135,6 +136,7 @@ router.put("/:id", isAuthenticated, isAdmin, (req, res) => {
           type,
           dueDate || null,
           totalMarks || null,
+          earnedMarks || 0,
           incomingWeight || null,
           status || "pending",
           assessmentId,

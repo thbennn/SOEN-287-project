@@ -6,36 +6,23 @@
     <title>Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../Css/nav.css" />
     <link rel="stylesheet" href="../Css/dashboard.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
       integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <!-- Latest compiled and minified CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
-    <!-- Latest compiled JavaScript -->
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Js/nav.js" defer></script>
+    <script src="../Js/dashboard.js" defer></script>
   </head>
 
   <body>
     <header class="navbar-container">
       <nav class="navbar">
         <div class="nav-logo">
-          <a href="dashboard.html"> <img src="../Photos/logo.png" alt="University logo" /> </a>
+          <a href="dashboard.html"><img src="../Photos/logo.png" alt="University logo" /></a>
         </div>
 
         <div class="hamburger" id="hamburger">
@@ -48,7 +35,7 @@
           <li><a href="dashboard.html">Home</a></li>
           <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="my courses.html">My courses</a></li>
-          <li><a href="adminManageUsers.html">Admin</a></li>
+          <li id="admin-nav-link"><a href="adminManageUsers.html">Admin</a></li>
           <li class="phone-only"><a href="#">Edit Profile</a></li>
           <li class="phone-only"><a href="#">Settings & Privacy</a></li>
           <li class="phone-only">
@@ -63,318 +50,36 @@
             <li><a href="#">Settings & Privacy</a></li>
             <li><a href="#">Help & Support</a></li>
             <li><a href="#" id="darkModeToggle">Dark/Light Mode</a></li>
-            <li><a href="login.html" class="logout">Log Out</a></li>
+            <li><a href="/api/auth/logout" class="logout">Log Out</a></li>
           </ul>
         </div>
       </nav>
     </header>
-    <main>
-      
+
+    <main class="py-4">
+
+      <!-- COURSE OVERVIEW -->
       <div class="container">
-        <!-- Header -->
         <div class="row">
           <div class="col-12" id="Course-Overview">Course Overview</div>
         </div>
         <hr />
-
-        <!-- 3 sections -->
-        <div class="row text-center">
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=SOEN287"
-              class="course-card d-flex flex-column p-3"
-              id="course-1"
-            >
-              <!-- Top Section -->
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/WebDevelopment.jpg"
-                  alt="Web Design"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">SOEN 287</h5>
-                  <p class="course-desc">Web Programming</p>
-                </div>
-              </div>
-
-              <!-- Average -->
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">82%</span>
-              </div>
-
-              <!-- Completion -->
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div class="progress-bar bg-danger" style="width: 60%"></div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=COMP346"
-              class="course-card d-flex flex-column p-3"
-              id="course-2"
-            >
-              <!-- Top Section -->
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/OperatingSytem.jpg"
-                  alt="Operating System"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">COMP 346</h5>
-                  <p class="course-desc">Operating System</p>
-                </div>
-              </div>
-
-              <!-- Average -->
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">70%</span>
-              </div>
-
-              <!-- Completion -->
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div class="progress-bar bg-info" style="width: 60%"></div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=COMP348"
-              class="course-card d-flex flex-column p-3"
-              id="course-3"
-            >
-              <!-- Top Section -->
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/PrincipalProgramming.png"
-                  alt="Programming Languages"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">COMP 348</h5>
-                  <p class="course-desc">Programming Languages</p>
-                </div>
-              </div>
-
-              <!-- Average -->
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">93%</span>
-              </div>
-
-              <!-- Completion -->
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div class="progress-bar bg-warning" style="width: 60%"></div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <br />
-
-        <div class="row text-center">
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=MATH204"
-              class="course-card d-flex flex-column p-3"
-              id="course-4"
-            >
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/MatrixVector.jpg"
-                  alt="Vectors & Matrices"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">MATH 204</h5>
-                  <p class="course-desc">Vectors & Matrices</p>
-                </div>
-              </div>
-
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">99%</span>
-              </div>
-
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div class="progress-bar bg-dark" style="width: 60%"></div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=COMP352"
-              class="course-card d-flex flex-column p-3"
-              id="course-5"
-            >
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/DataStructureandAlgorithms.jpg"
-                  alt="Data Structures & Algorithms"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">COMP 352</h5>
-                  <p class="course-desc">Data Structure & Algorithms</p>
-                </div>
-              </div>
-
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">57%</span>
-              </div>
-
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div
-                    class="progress-bar bg-secondary"
-                    style="width: 60%"
-                  ></div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-4">
-            <a
-              href="course-details.html?course=SOEN228"
-              class="course-card d-flex flex-column p-3"
-              id="course-6"
-            >
-              <div class="d-flex align-items-center">
-                <img
-                  src="../Photos/SystemHardware.webp"
-                  alt="System Hardware"
-                  class="course-img"
-                />
-                <div class="course-info ms-3">
-                  <h5 class="course-title">SOEN 228</h5>
-                  <p class="course-desc">System Hardware</p>
-                </div>
-              </div>
-
-              <div
-                class="mt-3 d-flex justify-content-between align-items-center"
-              >
-                <span class="avg-label">Current Average</span>
-                <span class="avg-value">86%</span>
-              </div>
-
-              <div class="mt-2">
-                <div class="d-flex justify-content-between">
-                  <span class="completion-label">Completion</span>
-                  <span class="completion-percent">60%</span>
-                </div>
-
-                <div class="progress mt-1" style="height: 6px">
-                  <div class="progress-bar bg-danger" style="width: 60%"></div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <br /><br />
+        <div class="row text-center" id="courses-container"></div>
       </div>
+
       <hr class="my-4" />
-      <div class="container  mt-5 mb-5">
-        <div
-          class="d-flex justify-content-between align-items-center flex-wrap gap-2"
-        >
+
+      <!-- UPCOMING -->
+      <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
           <div>
-            <h5 class="fw-bold mb-1 ">Upcoming</h5>
-            <p class="text-muted mb-0 ">Assignments due soon or overdue</p>
+            <h5 class="fw-bold mb-1">Upcoming</h5>
+            <p class="text-muted mb-0">Only overdue and due soon assessments</p>
           </div>
         </div>
-
-        <div class="list-group mt-3">
-          <!-- Overdue -->
-          <a
-            href="assessment-details.html"
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3"
-          >
-            <div>
-              <div class="fw-semibold">Assignment 1</div>
-              <div class="text-muted small">SOEN 287 • Due: 2026-02-08</div>
-            </div>
-            <span class="badge rounded-pill text-bg-danger">Overdue</span>
-          </a>
-
-          <!-- Due soon -->
-          <a
-            href="assessment-details.html"
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3"
-          >
-            <div>
-              <div class="fw-semibold">Lab 2</div>
-              <div class="text-muted small">COMP 346 • Due: 2026-02-20</div>
-            </div>
-            <span class="badge rounded-pill text-bg-warning">Due Soon</span>
-          </a>
-
-          <!-- Upcoming -->
-          <a
-            href="assessment-details.html"
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3"
-          >
-            <div>
-              <div class="fw-semibold">Quiz 1</div>
-              <div class="text-muted small">MATH 204 • Due: 2026-02-25</div>
-            </div>
-            <span class="badge rounded-pill text-bg-info">Upcoming</span>
-          </a>
-        </div>
+        <div class="list-group mt-3" id="upcoming-container"></div>
       </div>
-      
     </main>
+
   </body>
 </html>

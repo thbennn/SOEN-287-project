@@ -60,6 +60,51 @@ const assessmentRoutes = require("./server/routes/assessments");
 app.use("/api/assessments", assessmentRoutes);
 const statisticsRoutes = require("./server/routes/statistics");
 app.use("/api/statistics", statisticsRoutes);
+const enrollmentRoutes = require("./server/routes/enrollments");
+app.use("/api/enrollments", enrollmentRoutes);
+
+// Single assessment by ID (for assessment-details page)
+app.get("/api/assessment/:id", isAuthenticated, (req, res) => {
+  db.query(
+    "SELECT id, courseId, title, type, dueDate, earnedMarks, totalMarks, weight, status FROM assessments WHERE id = ?",
+    [req.params.id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (results.length === 0) return res.status(404).json({ error: "Assessment not found" });
+      res.json(results[0]);
+    }
+  );
+});
+
+// Upcoming assessments (overdue + due within 7 days)
+app.get("/api/upcoming-assessments", isAuthenticated, (req, res) => {
+  const query = `
+    SELECT a.id, a.title, a.dueDate, a.status, c.courseCode
+    FROM assessments a
+    JOIN courses c ON a.courseId = c.id
+    WHERE a.status != 'completed'
+      AND (
+        a.dueDate < CURDATE()
+        OR a.dueDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+      )
+    ORDER BY a.dueDate ASC
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const mapped = results.map(item => {
+      const due = new Date(item.dueDate);
+      due.setHours(0, 0, 0, 0);
+      return { ...item, label: due < today ? "Overdue" : "Due Soon" };
+    });
+
+    res.json(mapped);
+  });
+});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running on http://localhost:3000");

@@ -4,8 +4,16 @@ const db = require("../db");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
 router.get("/", isAuthenticated, (req, res) => {
-  const query =
-    "SELECT id, courseCode, courseName, instructor, status FROM courses";
+  const query = `
+    SELECT
+      c.id, c.courseCode, c.courseName, c.instructor, c.term, c.status,
+      IFNULL(ROUND((SUM(a.earnedMarks) / NULLIF(SUM(a.totalMarks), 0)) * 100), 0) AS average,
+      IFNULL(ROUND((SUM(CASE WHEN a.status = 'completed' THEN 1 ELSE 0 END) / NULLIF(COUNT(a.id), 0)) * 100), 0) AS completion
+    FROM courses c
+    LEFT JOIN assessments a ON c.id = a.courseId
+    GROUP BY c.id, c.courseCode, c.courseName, c.instructor, c.term, c.status
+    ORDER BY c.courseCode
+  `;
 
   db.query(query, (err, results) => {
     if (err) {
@@ -40,14 +48,16 @@ router.post("/", isAuthenticated, isAdmin, (req, res) => {
 
   const userId = req.session.user.id;
 
+  const { term } = req.body;
+
   const query = `
-      INSERT INTO courses (userId, courseCode, courseName, instructor, status) 
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO courses (userId, courseCode, courseName, instructor, term, status)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
 
   db.query(
     query,
-    [userId, courseCode, courseName, instructor, status],
+    [userId, courseCode, courseName, instructor, term || null, status],
     (err, results) => {
       if (err) {
         console.error("Error inserting course:", err);
@@ -80,17 +90,17 @@ router.delete("/:id", isAuthenticated, isAdmin, (req, res) => {
 
 router.put("/:id", isAuthenticated, isAdmin, (req, res) => {
   const courseId = req.params.id;
-  const { courseCode, courseName, instructor, status } = req.body;
+  const { courseCode, courseName, instructor, term, status } = req.body;
 
   const query = `
-      UPDATE courses 
-      SET courseCode = ?, courseName = ?, instructor = ?, status = ? 
+      UPDATE courses
+      SET courseCode = ?, courseName = ?, instructor = ?, term = ?, status = ?
       WHERE id = ?
     `;
 
   db.query(
     query,
-    [courseCode, courseName, instructor, status, courseId],
+    [courseCode, courseName, instructor, term || null, status, courseId],
     (err, results) => {
       if (err) {
         console.error("Error updating course:", err);
