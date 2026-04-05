@@ -272,6 +272,34 @@
       </div>
     </div>
 
+    <!-- Grades Modal -->
+    <div class="modal fade" id="gradesModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="gradesModalTitle">Student Grades</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Earned Marks</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="grades-table-body">
+                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const courseId = urlParams.get("courseId");
@@ -315,13 +343,17 @@
                   <td>${assessment.weight || "N/A"}</td>
                   <td><span class="status ${statusClass}">${assessment.status.charAt(0).toUpperCase() + assessment.status.slice(1)}</span></td>
                   <td>
-                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editAssessmentModal" 
-                       data-id="${assessment.id}" data-title="${assessment.title}" data-type="${assessment.type}" 
-                       data-date="${displayDate}" data-marks="${assessment.totalMarks || ""}" 
+                    <a href="#" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editAssessmentModal"
+                       data-id="${assessment.id}" data-title="${assessment.title}" data-type="${assessment.type}"
+                       data-date="${displayDate}" data-marks="${assessment.totalMarks || ""}"
                        data-weight="${assessment.weight || ""}" data-status="${assessment.status}">
                        <i class="fa-solid fa-pen"></i>
                     </a>
                     <a href="#" class="action-btn delete" data-id="${assessment.id}" data-title="${assessment.title}"><i class="fa-solid fa-trash"></i></a>
+                    <a href="#" class="action-btn grades-btn"
+                       data-id="${assessment.id}" data-title="${assessment.title}" data-marks="${assessment.totalMarks || 0}">
+                       <i class="fa-solid fa-list"></i>
+                    </a>
                   </td>
                 </tr>
               `;
@@ -435,6 +467,100 @@
             }
           }
         });
+
+      // Grades button — open modal and load student grades
+      document
+        .getElementById("assessment-table-body")
+        .addEventListener("click", function (e) {
+          const gradesBtn = e.target.closest(".grades-btn");
+          if (!gradesBtn) return;
+          e.preventDefault();
+
+          const assessmentId = gradesBtn.dataset.id;
+          const title = gradesBtn.dataset.title;
+          const totalMarks = parseFloat(gradesBtn.dataset.marks) || 0;
+
+          document.getElementById("gradesModalTitle").textContent = `Student Grades — ${title}`;
+          document.getElementById("grades-table-body").innerHTML =
+            `<tr><td colspan="5" class="text-center">Loading...</td></tr>`;
+
+          const modal = new bootstrap.Modal(document.getElementById("gradesModal"));
+          modal.show();
+
+          fetch(`/api/grades/by-assessment?assessmentId=${assessmentId}&courseId=${courseId}`)
+            .then((res) => res.json())
+            .then((students) => {
+              const tbody = document.getElementById("grades-table-body");
+
+              if (!students.length) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No enrolled students.</td></tr>`;
+                return;
+              }
+
+              tbody.innerHTML = students.map((s) => `
+                <tr>
+                  <td>${s.schoolId || "N/A"}</td>
+                  <td>${s.firstName} ${s.lastName}</td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm earned-input"
+                      value="${s.earnedMarks}" min="0" max="${totalMarks}"
+                      style="width:90px;" data-student-id="${s.userId}" data-assessment-id="${assessmentId}" />
+                  </td>
+                  <td>
+                    <select class="form-select form-select-sm status-select"
+                      data-student-id="${s.userId}" data-assessment-id="${assessmentId}" style="width:120px;">
+                      <option value="0" ${s.isClosed === 0 ? "selected" : ""}>Pending</option>
+                      <option value="1" ${s.isClosed === 1 ? "selected" : ""}>Completed</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-primary save-grade-btn"
+                      data-student-id="${s.userId}" data-assessment-id="${assessmentId}">
+                      Save
+                    </button>
+                  </td>
+                </tr>
+              `).join("");
+            })
+            .catch(() => {
+              document.getElementById("grades-table-body").innerHTML =
+                `<tr><td colspan="5" class="text-center text-danger">Failed to load grades.</td></tr>`;
+            });
+        });
+
+      // Save individual grade from modal
+      document.getElementById("gradesModal").addEventListener("click", function (e) {
+        const saveBtn = e.target.closest(".save-grade-btn");
+        if (!saveBtn) return;
+
+        const studentId = saveBtn.dataset.studentId;
+        const assessmentId = saveBtn.dataset.assessmentId;
+        const row = saveBtn.closest("tr");
+        const earnedMarks = parseFloat(row.querySelector(".earned-input").value) || 0;
+        const isClosed = parseInt(row.querySelector(".status-select").value);
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+
+        fetch("/api/grades/admin", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId, assessmentId, earnedMarks, isClosed }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            saveBtn.textContent = "Saved!";
+            setTimeout(() => {
+              saveBtn.disabled = false;
+              saveBtn.textContent = "Save";
+            }, 1500);
+          })
+          .catch(() => {
+            saveBtn.disabled = false;
+            saveBtn.textContent = "Save";
+            alert("Failed to save grade.");
+          });
+      });
     </script>
   </body>
 </html>

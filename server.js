@@ -80,6 +80,9 @@ app.use("/api/statistics", statisticsRoutes);
 const enrollmentRoutes = require("./server/routes/enrollments");
 app.use("/api/enrollments", enrollmentRoutes);
 
+const gradeRoutes = require("./server/routes/grades");
+app.use("/api/grades", gradeRoutes);
+
 // Single assessment by ID
 app.get("/api/assessment/:id", isAuthenticated, (req, res) => {
   const assessmentId = req.params.id;
@@ -112,11 +115,13 @@ app.get("/api/upcoming-assessments", isAuthenticated, (req, res) => {
   }
 
   const query = `
-    SELECT a.id, a.title, a.dueDate, a.status, c.courseCode
+    SELECT a.id, a.title, a.dueDate, c.courseCode
     FROM assessments a
     JOIN courses c ON a.courseId = c.id
-    WHERE c.userId = ?
-      AND a.status != 'completed'
+    JOIN enrollments e ON e.courseId = c.id AND e.userId = ?
+    LEFT JOIN grades g ON g.assessmentId = a.id AND g.studentId = ?
+    WHERE COALESCE(g.isClosed, 0) != 1
+      AND a.dueDate IS NOT NULL
       AND (
         a.dueDate < CURDATE()
         OR a.dueDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
@@ -124,7 +129,7 @@ app.get("/api/upcoming-assessments", isAuthenticated, (req, res) => {
     ORDER BY a.dueDate ASC
   `;
 
-  db.query(query, [userId], (err, results) => {
+  db.query(query, [userId, userId], (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database error" });
     }

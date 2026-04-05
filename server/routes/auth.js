@@ -21,31 +21,43 @@ router.post('/register', (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    // Hash the password
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (err) return res.status(500).json({ message: 'Error hashing password' });
+    // Check if studentId already exists (only if provided)
+    if (studentId && studentId.trim() !== '') {
+      db.query('SELECT id FROM users WHERE studentId = ?', [studentId.trim()], (err, idResults) => {
+        if (err) return res.status(500).json({ message: 'Database error' });
+        if (idResults.length > 0) {
+          return res.status(400).json({ message: 'Student ID already registered' });
+        }
+        proceedWithRegistration();
+      });
+    } else {
+      proceedWithRegistration();
+    }
 
-  
+    function proceedWithRegistration() {
       let formattedDob = null;
-if (dob) {
-  const parts = dob.split('/');
-  if (parts.length === 3) {
-    formattedDob = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  } else {
-    formattedDob = dob; // already in correct format
-  }
-}
+      if (dob) {
+        const parts = dob.split('/');
+        if (parts.length === 3) {
+          formattedDob = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        } else {
+          formattedDob = dob;
+        }
+      }
 
-      // Save user to database
-      db.query(
-      'INSERT INTO users (firstName, lastName, email, passwordHash, phone, dob, studentId, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [firstName, lastName, email, hash, phone, formattedDob, studentId, role || 'student'],
-      (err, result) => {
-     if (err) return res.status(500).json({ message: err.message });
-     res.status(201).json({ message: 'User registered successfully' });
-  }
-);
-    });
+      bcrypt.hash(password, 10, (err, hash) => {
+        if (err) return res.status(500).json({ message: 'Error hashing password' });
+
+        db.query(
+          'INSERT INTO users (firstName, lastName, email, passwordHash, phone, dob, studentId, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          [firstName, lastName, email, hash, phone, formattedDob, studentId, role || 'student'],
+          (err) => {
+            if (err) return res.status(500).json({ message: err.message });
+            res.status(201).json({ message: 'User registered successfully' });
+          }
+        );
+      });
+    }
   });
 });
 // LOGIN

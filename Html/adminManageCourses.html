@@ -269,7 +269,7 @@
                 <tr>
                   <td>${course.courseCode}</td>
                   <td>${course.courseName}</td>
-                  <td>${course.instructor}</td>
+                  <td>${course.instructor || 'N/A'}</td>
                   <td><span class="status ${statusClass}">${displayStatus}</span></td>
                   <td>
                     <a href="adminManageAssessments.html?courseId=${course.id}&courseCode=${encodeURIComponent(course.courseCode)}" class="action-btn assessments" title="Manage Assessments"> <i class="fa-solid fa-list-check"></i></a>

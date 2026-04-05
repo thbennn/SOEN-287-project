@@ -4,6 +4,7 @@ const assessmentId = params.get('assessment');
 
 let currentAssessment = null;
 let currentCourse = null;
+let currentGrade = { earnedMarks: 0, isClosed: 0 };
 
 const assessmentTitle = document.getElementById('assessment-title');
 const assessmentSubtitle = document.getElementById('assessment-subtitle');
@@ -24,26 +25,28 @@ const submissionDate = document.getElementById('submission-date');
 
 const saveMarksBtn = document.getElementById('save-marks-btn');
 const markCompletedBtn = document.getElementById('mark-completed-btn');
-const editAssessmentBtn = document.getElementById('edit-assessment-btn');
-const gradeAssessmentBtn = document.getElementById('grade-assessment-btn');
 
 async function fetchAssessmentDetails() {
   try {
-    const courseRes = await fetch('/api/courses');
+    const [courseRes, assessmentRes, gradeRes] = await Promise.all([
+      fetch('/api/courses'),
+      fetch(`/api/assessment/${assessmentId}`),
+      fetch(`/api/grades?assessmentId=${assessmentId}`)
+    ]);
+
     const courses = await courseRes.json();
+    const assessment = await assessmentRes.json();
+    const grade = await gradeRes.json();
 
     currentCourse = courses.find(
       c => c.courseCode.trim().toLowerCase() === courseCode.trim().toLowerCase()
     );
 
     if (!currentCourse) throw new Error('Course not found');
-
-    const assessmentRes = await fetch(`/api/assessment/${assessmentId}`);
-    const assessment = await assessmentRes.json();
-
     if (assessment.error) throw new Error(assessment.error);
 
     currentAssessment = assessment;
+    currentGrade = grade;
     renderAssessment();
   } catch (err) {
     console.error('Assessment details error:', err);
@@ -58,7 +61,7 @@ function renderAssessment() {
   assessmentTitle.textContent = currentAssessment.title;
   assessmentSubtitle.textContent = `${currentCourse.courseCode} • Due: ${formatDate(currentAssessment.dueDate)} • Weight: ${weightValue}`;
 
-  const isCompleted = currentAssessment.status === 'completed';
+  const isCompleted = currentGrade.isClosed === 1;
   assessmentStatusBadge.textContent = isCompleted ? 'Completed' : 'Pending';
   assessmentStatusBadge.className = `badge ${isCompleted ? 'text-bg-success' : 'text-bg-warning'}`;
 
@@ -67,7 +70,7 @@ function renderAssessment() {
   infoWeight.textContent = weightValue;
   infoType.textContent = currentAssessment.type;
 
-  earnedMarksInput.value = currentAssessment.earnedMarks ?? 0;
+  earnedMarksInput.value = currentGrade.earnedMarks ?? 0;
   totalMarksInput.value = currentAssessment.totalMarks ?? 0;
 
   updateScoreUI();
@@ -106,26 +109,20 @@ saveMarksBtn.addEventListener('click', async () => {
   }
 
   try {
-    const res = await fetch(`/api/assessments/${currentAssessment.id}`, {
+    const res = await fetch('/api/grades', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title: currentAssessment.title,
-        type: currentAssessment.type,
-        dueDate: formatDate(currentAssessment.dueDate),
-        weight: currentAssessment.weight || 0,
+        assessmentId: currentAssessment.id,
         earnedMarks,
-        totalMarks,
-        status: currentAssessment.status
+        isClosed: currentGrade.isClosed
       })
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to save marks');
 
-    currentAssessment.earnedMarks = earnedMarks;
-    currentAssessment.totalMarks = totalMarks;
-
+    currentGrade.earnedMarks = earnedMarks;
     updateScoreUI();
     alert('Marks saved successfully!');
   } catch (err) {
@@ -139,38 +136,26 @@ markCompletedBtn.addEventListener('click', async () => {
   if (!currentAssessment) return;
 
   try {
-    const res = await fetch(`/api/assessments/${currentAssessment.id}`, {
+    const res = await fetch('/api/grades', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title: currentAssessment.title,
-        type: currentAssessment.type,
-        dueDate: formatDate(currentAssessment.dueDate),
-        weight: currentAssessment.weight || 0,
+        assessmentId: currentAssessment.id,
         earnedMarks: parseFloat(earnedMarksInput.value) || 0,
-        totalMarks: parseFloat(totalMarksInput.value) || 0,
-        status: 'completed'
+        isClosed: 1
       })
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to mark completed');
 
-    currentAssessment.status = 'completed';
+    currentGrade.isClosed = 1;
     renderAssessment();
     alert('Assessment marked as completed!');
   } catch (err) {
     console.error('Completion error:', err);
     alert('Could not update completion status.');
   }
-});
-
-editAssessmentBtn.addEventListener('click', () => {
-  alert('Edit assessment title/type/date from the course-details page.');
-});
-
-gradeAssessmentBtn.addEventListener('click', () => {
-  saveMarksBtn.click();
 });
 
 earnedMarksInput.addEventListener('input', updateScoreUI);

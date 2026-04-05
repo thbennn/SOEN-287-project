@@ -29,11 +29,11 @@ async function fetchCourseDetails() {
       subtitleEl.textContent = `${course.courseName} • ${course.term || ''} • Instructor: ${course.instructor || 'N/A'}`;
     }
 
-    const res = await fetch(`/api/assessments?courseId=${courseId}`);
-    const assessments = await res.json();
+    const res = await fetch(`/api/grades/by-course?courseId=${courseId}`);
+    const data = await res.json();
 
-    renderAssessments(assessments, course);
-    updateSummary(assessments);
+    renderAssessments(data.assessments || [], course);
+    updateSummary(data);
 
   } catch (err) {
     console.error('Fetch error:', err);
@@ -54,27 +54,19 @@ function renderAssessments(assessments, course) {
   }
 
   assessments.forEach(a => {
-    const statusBadge = a.status === 'completed' ? 'text-bg-success' : 'text-bg-warning';
+    const statusBadge = a.isClosed === 1 ? 'text-bg-success' : 'text-bg-warning';
 
     tbody.innerHTML += `
       <tr data-id="${a.id}">
-        <td>
-          <a href="assessment-details.html?course=${encodeURIComponent(course.courseCode)}&assessment=${a.id}" class="assessment-link">
-            ${a.title}
-          </a>
-        </td>
-        <td>${a.type}</td>
+        <td>${a.title}</td>
+        <td style="text-transform: capitalize;">${a.type}</td>
         <td>${formatDate(a.dueDate)}</td>
-        <td>
-          <input class="form-control form-control-sm earned-input" value="${a.earnedMarks ?? ''}" readonly />
-        </td>
-        <td>
-          <input class="form-control form-control-sm total-input" value="${a.totalMarks ?? ''}" readonly />
-        </td>
+        <td>${a.earnedMarks ?? '-'}</td>
+        <td>${a.totalMarks ?? '-'}</td>
         <td>${a.weight ?? 0}%</td>
         <td>
           <span class="badge ${statusBadge}">
-            ${a.status === 'completed' ? 'Completed' : 'Pending'}
+            ${a.isClosed === 1 ? 'Completed' : 'Pending'}
           </span>
         </td>
         <td class="text-end">
@@ -135,13 +127,14 @@ if (saveBtn) {
     }
 
     const title = document.getElementById('title').value.trim();
-    const type = document.getElementById('type').value.trim();
+    const type = document.getElementById('type').value;
     const dueDate = document.getElementById('dueDate').value;
     const totalMarks = document.getElementById('total').value;
     const weight = document.getElementById('weight').value;
+    const status = document.getElementById('addStatus').value;
 
-    if (!title || !type || !dueDate || !totalMarks || !weight) {
-      alert('Please fill all fields.');
+    if (!title || !type || !totalMarks) {
+      alert('Please fill all required fields.');
       return;
     }
 
@@ -163,16 +156,16 @@ if (saveBtn) {
           courseId,
           title,
           type,
-          dueDate,
-          weight,
+          dueDate: dueDate || null,
+          weight: weight || 0,
           earnedMarks: 0,
           totalMarks,
-          status: 'pending'
+          status
         })
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to add assessment');
+      if (!res.ok) throw new Error(data.error || data.message || 'Failed to add assessment');
 
       const modalEl = document.getElementById('addAssessmentModal');
       const modal = bootstrap.Modal.getInstance(modalEl);
@@ -182,48 +175,20 @@ if (saveBtn) {
       fetchCourseDetails();
     } catch (err) {
       console.error('Add error:', err);
-      alert('Could not save assessment.');
+      alert('Could not save assessment: ' + err.message);
     }
   });
 }
 
 // ---------------- SUMMARY (WEIGHTED AVERAGE) ----------------
-function updateSummary(assessments) {
+function updateSummary(data) {
   const avgBox = document.querySelector('.summary-box h2');
   const progressBar = document.querySelector('.summary-box .progress-bar');
   const completionText = document.querySelector('.summary-box .fw-semibold');
 
-  if (!assessments.length) {
-    if (avgBox) avgBox.textContent = '-';
-    if (progressBar) progressBar.style.width = '0%';
-    if (completionText) completionText.textContent = '0/0';
-    return;
-  }
-
-  let weightedScoreSum = 0;
-  let totalWeight = 0;
-
-  assessments.forEach(a => {
-    const earned = parseFloat(a.earnedMarks) || 0;
-    const total = parseFloat(a.totalMarks) || 0;
-    const weight = parseFloat(a.weight) || 0;
-
-    if (total > 0 && weight > 0) {
-      const percentage = (earned / total) * 100;
-      weightedScoreSum += percentage * weight;
-      totalWeight += weight;
-    }
-  });
-
-  const avg = totalWeight > 0 ? Math.round(weightedScoreSum / totalWeight) : 0;
-
-  if (avgBox) avgBox.textContent = `${avg}%`;
-
-  const completed = assessments.filter(a => a.status === 'completed').length;
-  const completion = Math.round((completed / assessments.length) * 100);
-
-  if (progressBar) progressBar.style.width = `${completion}%`;
-  if (completionText) completionText.textContent = `${completed}/${assessments.length}`;
+  if (avgBox) avgBox.textContent = `${data.average ?? 0}%`;
+  if (progressBar) progressBar.style.width = `${data.completion ?? 0}%`;
+  if (completionText) completionText.textContent = `${data.completedCount ?? 0}/${data.totalCount ?? 0}`;
 }
 
 // ---------------- START ----------------

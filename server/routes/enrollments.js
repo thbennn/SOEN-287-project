@@ -10,11 +10,15 @@ router.get("/", isAuthenticated, (req, res) => {
   const query = `
     SELECT
       c.id, c.courseCode, c.courseName, c.instructor, c.term, c.status,
-      IFNULL(ROUND((SUM(a.earnedMarks) / NULLIF(SUM(a.totalMarks), 0)) * 100), 0) AS average,
-      IFNULL(ROUND((SUM(CASE WHEN a.status = 'completed' THEN 1 ELSE 0 END) / NULLIF(COUNT(a.id), 0)) * 100), 0) AS completion
+      IFNULL(ROUND(
+        SUM(CASE WHEN a.totalMarks > 0 AND a.weight > 0 THEN (g.earnedMarks / a.totalMarks) * 100 * a.weight ELSE 0 END)
+        / NULLIF(SUM(CASE WHEN a.totalMarks > 0 AND a.weight > 0 THEN a.weight ELSE 0 END), 0)
+      ), 0) AS average,
+      IFNULL(ROUND((SUM(CASE WHEN g.isClosed = 1 THEN 1 ELSE 0 END) / NULLIF(COUNT(a.id), 0)) * 100), 0) AS completion
     FROM enrollments e
     JOIN courses c ON e.courseId = c.id
     LEFT JOIN assessments a ON c.id = a.courseId
+    LEFT JOIN grades g ON g.assessmentId = a.id AND g.studentId = e.userId
     WHERE e.userId = ? AND c.status = 'active'
     GROUP BY c.id, c.courseCode, c.courseName, c.instructor, c.term, c.status
     ORDER BY c.courseCode
