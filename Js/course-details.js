@@ -3,7 +3,6 @@ const courseCode = decodeURIComponent(
 );
 
 const tbody = document.getElementById('assessments-tbody');
-const addBtn = document.getElementById('add-assessment-btn');
 const saveBtn = document.getElementById('save-assessment');
 
 let courseId = null;
@@ -67,10 +66,10 @@ function renderAssessments(assessments, course) {
         <td>${a.type}</td>
         <td>${formatDate(a.dueDate)}</td>
         <td>
-          <input class="form-control form-control-sm earned-input" value="${a.earnedMarks ?? ''}" />
+          <input class="form-control form-control-sm earned-input" value="${a.earnedMarks ?? ''}" readonly />
         </td>
         <td>
-          <input class="form-control form-control-sm total-input" value="${a.totalMarks ?? ''}" />
+          <input class="form-control form-control-sm total-input" value="${a.totalMarks ?? ''}" readonly />
         </td>
         <td>
           <span class="badge ${statusBadge}">
@@ -86,7 +85,7 @@ function renderAssessments(assessments, course) {
     `;
   });
 
-  attachRowListeners();
+  attachRowListeners(course);
 }
 
 // ---------------- FORMAT DATE ----------------
@@ -96,45 +95,13 @@ function formatDate(dateStr) {
 }
 
 // ---------------- EDIT / DELETE ----------------
-function attachRowListeners() {
+function attachRowListeners(course) {
   tbody.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', async e => {
+    btn.addEventListener('click', e => {
       const tr = e.target.closest('tr');
       const id = tr.dataset.id;
 
-      const title = tr.querySelector('.assessment-link').textContent.trim();
-      const type = tr.children[1].textContent.trim();
-      const dueDate = tr.children[2].textContent.trim();
-      const earnedMarks = tr.querySelector('.earned-input').value || 0;
-      const totalMarks = tr.querySelector('.total-input').value || 0;
-
-      if (Number(earnedMarks) < 0 || Number(totalMarks) < 0) {
-        alert('Marks cannot be negative.');
-        return;
-      }
-
-      if (Number(earnedMarks) > Number(totalMarks)) {
-        alert('Earned marks cannot be greater than total marks.');
-        return;
-      }
-
-      const status = Number(earnedMarks) > 0 && Number(earnedMarks) === Number(totalMarks) ? 'completed' : 'pending';
-
-      try {
-        const res = await fetch(`/api/assessments/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, type, dueDate, weight: 0, earnedMarks, totalMarks, status })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to update assessment');
-
-        fetchCourseDetails();
-      } catch (err) {
-        console.error('Edit error:', err);
-        alert('Could not update assessment.');
-      }
+      window.location.href = `assessment-details.html?course=${encodeURIComponent(course.courseCode)}&assessment=${id}`;
     });
   });
 
@@ -185,7 +152,16 @@ if (saveBtn) {
       const res = await fetch('/api/assessments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, title, type, dueDate, weight: 0, earnedMarks: 0, totalMarks, status: 'pending' })
+        body: JSON.stringify({
+          courseId,
+          title,
+          type,
+          dueDate,
+          weight: 0,
+          earnedMarks: 0,
+          totalMarks,
+          status: 'pending'
+        })
       });
 
       const data = await res.json();
