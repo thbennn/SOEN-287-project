@@ -47,7 +47,7 @@ function renderAssessments(assessments, course) {
   if (!assessments.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" class="text-center text-muted">No assessments yet.</td>
+        <td colspan="8" class="text-center text-muted">No assessments yet.</td>
       </tr>
     `;
     return;
@@ -71,6 +71,7 @@ function renderAssessments(assessments, course) {
         <td>
           <input class="form-control form-control-sm total-input" value="${a.totalMarks ?? ''}" readonly />
         </td>
+        <td>${a.weight ?? 0}%</td>
         <td>
           <span class="badge ${statusBadge}">
             ${a.status === 'completed' ? 'Completed' : 'Pending'}
@@ -137,14 +138,20 @@ if (saveBtn) {
     const type = document.getElementById('type').value.trim();
     const dueDate = document.getElementById('dueDate').value;
     const totalMarks = document.getElementById('total').value;
+    const weight = document.getElementById('weight').value;
 
-    if (!title || !type || !dueDate || !totalMarks) {
+    if (!title || !type || !dueDate || !totalMarks || !weight) {
       alert('Please fill all fields.');
       return;
     }
 
     if (Number(totalMarks) < 0) {
       alert('Total marks cannot be negative.');
+      return;
+    }
+
+    if (Number(weight) < 0) {
+      alert('Weight cannot be negative.');
       return;
     }
 
@@ -157,7 +164,7 @@ if (saveBtn) {
           title,
           type,
           dueDate,
-          weight: 0,
+          weight,
           earnedMarks: 0,
           totalMarks,
           status: 'pending'
@@ -180,7 +187,7 @@ if (saveBtn) {
   });
 }
 
-// ---------------- SUMMARY ----------------
+// ---------------- SUMMARY (WEIGHTED AVERAGE) ----------------
 function updateSummary(assessments) {
   const avgBox = document.querySelector('.summary-box h2');
   const progressBar = document.querySelector('.summary-box .progress-bar');
@@ -193,9 +200,22 @@ function updateSummary(assessments) {
     return;
   }
 
-  const totalEarned = assessments.reduce((sum, a) => sum + (parseFloat(a.earnedMarks) || 0), 0);
-  const totalMarks = assessments.reduce((sum, a) => sum + (parseFloat(a.totalMarks) || 0), 0);
-  const avg = totalMarks ? Math.round((totalEarned / totalMarks) * 100) : 0;
+  let weightedScoreSum = 0;
+  let totalWeight = 0;
+
+  assessments.forEach(a => {
+    const earned = parseFloat(a.earnedMarks) || 0;
+    const total = parseFloat(a.totalMarks) || 0;
+    const weight = parseFloat(a.weight) || 0;
+
+    if (total > 0 && weight > 0) {
+      const percentage = (earned / total) * 100;
+      weightedScoreSum += percentage * weight;
+      totalWeight += weight;
+    }
+  });
+
+  const avg = totalWeight > 0 ? Math.round(weightedScoreSum / totalWeight) : 0;
 
   if (avgBox) avgBox.textContent = `${avg}%`;
 
